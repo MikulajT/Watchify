@@ -1,4 +1,5 @@
 using BLL;
+using BLL.Services;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ builder.Services.AddHangfire(x =>
     x.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddHangfireServer();
+builder.Services.AddTransient<IUsersService, UsersService>();
 
 var app = builder.Build();
 
@@ -42,7 +44,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseHangfireDashboard();
-RecurringJob.AddOrUpdate("notify", () => Notifier.NotifyAllUsers(), "0 4 * * *");
+RecurringJob.AddOrUpdate("notify", () => Notifier.NotifyAllUsers(), "0 4 * * 5");
 
 app.MapControllerRoute(
     name: "default",
