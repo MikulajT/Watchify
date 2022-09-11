@@ -22,6 +22,7 @@ builder.Services.AddHangfire(x =>
 });
 builder.Services.AddHangfireServer();
 builder.Services.AddTransient<IUsersService, UsersService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
