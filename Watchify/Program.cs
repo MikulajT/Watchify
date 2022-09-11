@@ -8,7 +8,7 @@ using Watchify.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration["ConnectionString"];
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -18,11 +18,10 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddHangfire(x =>
 {
-    x.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"));
+    x.UseSqlServerStorage(builder.Configuration["ConnectionString"]);
 });
 builder.Services.AddHangfireServer();
 builder.Services.AddTransient<IUsersService, UsersService>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
