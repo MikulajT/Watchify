@@ -7,13 +7,9 @@ namespace Watchify.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly IUsersService _usersService;
-
-        public HomeController(ILogger<HomeController> logger, IUsersService usersService)
+        public HomeController()
         {
-            _logger = logger;
-            _usersService = usersService;
+
         }
 
         public IActionResult Index()
