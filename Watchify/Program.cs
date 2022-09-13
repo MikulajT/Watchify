@@ -45,7 +45,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseHangfireDashboard();
-RecurringJob.AddOrUpdate<INotifierService>(x => x.NotifyAllUsers(), "0 4 * * 5");
+RecurringJob.AddOrUpdate<NotifierService>(x => x.NotifyAllUsers(), "0 4 * * 5");
 
 app.MapControllerRoute(
     name: "default",

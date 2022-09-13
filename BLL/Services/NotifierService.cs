@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-    internal class NotifierService : INotifierService
+    public class NotifierService : INotifierService
     {
         public void NotifyAllUsers()
         {
