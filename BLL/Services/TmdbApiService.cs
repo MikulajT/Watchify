@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TMDbLib.Client;
+using TMDbLib.Objects.General;
 using TMDbLib.Objects.Movies;
 using TMDbLib.Objects.Search;
 using TMDbLib.Objects.TvShows;
@@ -27,6 +28,13 @@ namespace BLL.Services
             TMDbClient client = new TMDbClient(apiKey);
             var tvShows = client.GetTvShowPopularAsync().Result.Results;
             return tvShows;
+        }
+
+        public IEnumerable<Genre> GetGenres(string apiKey)
+        {
+            TMDbClient client = new TMDbClient(apiKey);
+            var genres = client.GetTvGenresAsync().Result;
+            return genres;
         }
     }
 }

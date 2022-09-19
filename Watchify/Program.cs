@@ -1,5 +1,6 @@
 using BLL;
 using BLL.Services;
+using DAL.Repository;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,8 @@ builder.Services.AddHangfireServer();
 builder.Services.AddTransient<IUsersService, UsersService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<ITmdbApiService, TmdbApiService>();
+builder.Services.AddTransient<INotifierService, NotifierService>();
+builder.Services.AddTransient<IUsersRepository, UsersRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -45,7 +48,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseHangfireDashboard();
-RecurringJob.AddOrUpdate<NotifierService>(x => x.NotifyAllUsers(), "0 4 * * 5");
+//RecurringJob.AddOrUpdate<NotifierService>(x => x.NotifyAllUsers(builder.Configuration["TmdbApiKey"]), "0 4 * * 5");
 
 app.MapControllerRoute(
     name: "default",

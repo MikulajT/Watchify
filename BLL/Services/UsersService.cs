@@ -13,10 +13,9 @@ namespace BLL.Services
     {
         private IUsersRepository _usersRepository;
 
-        public UsersService(/*IUsersRepository usersRepository*/)
+        public UsersService(IUsersRepository usersRepository)
         {
-            //TODO: Init by DI
-            _usersRepository = new UsersRepository();
+            _usersRepository = usersRepository;
         }
 
         public IEnumerable<IdentityUser> GetAllUsers()

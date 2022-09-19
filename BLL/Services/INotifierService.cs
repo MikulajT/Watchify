@@ -8,6 +8,6 @@ namespace BLL.Services
 {
     public interface INotifierService
     {
-        public void NotifyAllUsers();
+        public void NotifyAllUsers(string tmdbApiKey);
     }
 }
