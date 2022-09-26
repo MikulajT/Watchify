@@ -9,12 +9,13 @@ using TMDbLib.Objects.Search;
 
 namespace BLL
 {
-    internal class AutomapperProfiles : Profile
+    public class AutomapperProfiles : Profile
     {
         public AutomapperProfiles()
         {
             CreateMap<SearchTv, MovieTvShow>();
-            CreateMap<SearchMovie, MovieTvShow>();
+            CreateMap<SearchMovie, MovieTvShow>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Title));
         }
     }
 }

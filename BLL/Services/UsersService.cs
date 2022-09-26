@@ -18,7 +18,7 @@ namespace BLL.Services
             _usersRepository = usersRepository;
         }
 
-        public IEnumerable<IdentityUser> GetAllUsers()
+        public IEnumerable<ApplicationUser> GetAllUsers()
         {
             return _usersRepository.GetAllUsers();
         }

@@ -14,6 +14,6 @@ namespace BLL.Services
         /// Gets all users
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IdentityUser> GetAllUsers();
+        public IEnumerable<ApplicationUser> GetAllUsers();
     }
 }

@@ -20,19 +20,22 @@ namespace BLL.Services
         }
         public void Send(string from, string to, string subject, string html)
         {
-            // create message
-            var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse(from));
-            email.To.Add(MailboxAddress.Parse(to));
-            email.Subject = subject;
-            email.Body = new TextPart(TextFormat.Html) { Text = html };
+            if (html.Length > 0)
+            {
+                // create message
+                var email = new MimeMessage();
+                email.From.Add(MailboxAddress.Parse(from));
+                email.To.Add(MailboxAddress.Parse(to));
+                email.Subject = subject;
+                email.Body = new TextPart(TextFormat.Html) { Text = html };
 
-            // send email
-            using var smtp = new SmtpClient();
-            smtp.Connect(_config["Email:SmtpServer"], int.Parse(_config["Email:Port"]), SecureSocketOptions.StartTls);
-            smtp.Authenticate(_config["Email:Username"], _config["Email:Password"]);
-            smtp.Send(email);
-            smtp.Disconnect(true);
+                // send email
+                using var smtp = new SmtpClient();
+                smtp.Connect(_config["Email:SmtpServer"], int.Parse(_config["Email:Port"]), SecureSocketOptions.StartTls);
+                smtp.Authenticate(_config["Email:Username"], _config["Email:Password"]);
+                smtp.Send(email);
+                smtp.Disconnect(true);
+            }
         }
     }
 }

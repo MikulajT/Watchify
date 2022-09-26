@@ -1,8 +1,11 @@
-﻿using System;
+﻿using AutoMapper;
+using BLL.ApiModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TMDbLib.Objects.Search;
 using TMDbLib.Objects.TvShows;
 
 namespace BLL.Services
@@ -12,11 +15,13 @@ namespace BLL.Services
         private IUsersService _usersService { get; set; }
         private IEmailService _emailService { get; set; }
         private ITmdbApiService _tmdbApiService { get; set; }
-        public NotifierService(IUsersService usersService, IEmailService emailService, ITmdbApiService tmdbApiService)
+        private readonly IMapper _mapper;
+        public NotifierService(IUsersService usersService, IEmailService emailService, ITmdbApiService tmdbApiService, IMapper mapper)
         {
             _usersService = usersService;
             _emailService = emailService;
             _tmdbApiService = tmdbApiService;
+            _mapper = mapper;
         }
 
         public void NotifyAllUsers(string tmdbApiKey)
@@ -24,32 +29,54 @@ namespace BLL.Services
             var users = _usersService.GetAllUsers().ToList();
             for (int i = 0; i < users.Count; i++)
             {
-                string htmlMessage = CreateHtmlMessage(tmdbApiKey);
-                _emailService.Send("watchify.com", users[i].Email, "Popular movies and tv shows notification", htmlMessage);
+                StringBuilder htmlMessage = new StringBuilder();
+                if (users[i].SendTvShowNotifications)
+                {
+                    var tvShows = _tmdbApiService.GetPopularTvShows(tmdbApiKey).ToList();
+                    List<MovieTvShow> moviesTvShows = _mapper.Map<List<SearchTv>, List<MovieTvShow>>(tvShows);
+                    string popularTvShows = CreateHtmlMessage(tmdbApiKey, moviesTvShows, ShowType.TvShow);
+                    htmlMessage.Append("<h1>Popular Movies</h1>");
+                    htmlMessage.Append(popularTvShows);
+                }
+                if (users[i].SendMovieNotifications)
+                {
+                    var tvShows = _tmdbApiService.GetPopularTvShows(tmdbApiKey).ToList();
+                    List<MovieTvShow> moviesTvShows = _mapper.Map<List<SearchTv>, List<MovieTvShow>>(tvShows);
+                    string popularMovies = CreateHtmlMessage(tmdbApiKey, moviesTvShows, ShowType.Movie);
+                    htmlMessage.Append("<h1>Popular TV shows</h1>");
+                    htmlMessage.Append(popularMovies);
+                }
+                _emailService.Send("watchify.com", users[i].Email, "Popular movies and tv shows notification", htmlMessage.ToString());
             }
         }
 
-        private string CreateHtmlMessage(string tmdbApiKey)
+        private string CreateHtmlMessage(string tmdbApiKey, List<MovieTvShow> moviesTvShows, ShowType showType)
         {
-            var shows = _tmdbApiService.GetPopularMovies(tmdbApiKey);
+            string showTypeUrl = "";
+            if (showType == ShowType.TvShow)
+            {
+                showTypeUrl += "tv";
+            }
+            else if (showType == ShowType.Movie)
+            {
+                showTypeUrl += "movie";
+            }
             StringBuilder html = new StringBuilder();
             html.Append("<ol>");
-            foreach (var tvShow in _tmdbApiService.GetPopularTvShows(tmdbApiKey))
+            foreach (var movieTvShow in moviesTvShows)
             {
                 string genres = "";
-                if (tvShow.GenreIds.Any())
+                if (movieTvShow.GenreIds.Any())
                 {
-                    genres = CreateGenresFromIds(tmdbApiKey, tvShow.GenreIds);
+                    genres = CreateGenresFromIds(tmdbApiKey, movieTvShow.GenreIds);
                 }
                 html.Append($@"
-                <h1>
-                    Popular TV shows
-                </h1>
                 <li>
   	                <ul>
-                        <li>Name: {tvShow.Name}</li>
+                        <li>Name: {movieTvShow.Name}</li>
                         <li>Genres: {genres}</li>
-                        <li>Rating: {tvShow.VoteAverage}</li>
+                        <li>Rating: {movieTvShow.VoteAverage}</li>
+                        <li>More info at: https://www.themoviedb.org/{showTypeUrl}/{movieTvShow.Id}</li>
 	                </ul> 
                 </li>");
             }
@@ -68,5 +95,10 @@ namespace BLL.Services
             result.Length = result.Length - 2;
             return result.ToString();
         }
+    }
+
+    enum ShowType {
+        TvShow,
+        Movie
     }
 }
