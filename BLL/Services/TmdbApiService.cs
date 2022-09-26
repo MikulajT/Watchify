@@ -16,14 +16,14 @@ namespace BLL.Services
 {
     public class TmdbApiService : ITmdbApiService
     {
-        public IEnumerable<SearchMovie> GetPopularMovies(string apiKey)
+        public IEnumerable<SearchMovie> GetPopularMovies(string apiKey, int page = 0)
         {
             TMDbClient client = new TMDbClient(apiKey);
             var movies = client.GetMoviePopularListAsync().Result.Results;
             return movies;
         }
 
-        public IEnumerable<SearchTv> GetPopularTvShows(string apiKey)
+        public IEnumerable<SearchTv> GetPopularTvShows(string apiKey, int page = 0)
         {
             TMDbClient client = new TMDbClient(apiKey);
             var tvShows = client.GetTvShowPopularAsync().Result.Results;

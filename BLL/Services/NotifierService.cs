@@ -31,6 +31,7 @@ namespace BLL.Services
 
         private string CreateHtmlMessage(string tmdbApiKey)
         {
+            var shows = _tmdbApiService.GetPopularMovies(tmdbApiKey);
             StringBuilder html = new StringBuilder();
             html.Append("<ol>");
             foreach (var tvShow in _tmdbApiService.GetPopularTvShows(tmdbApiKey))
@@ -41,6 +42,9 @@ namespace BLL.Services
                     genres = CreateGenresFromIds(tmdbApiKey, tvShow.GenreIds);
                 }
                 html.Append($@"
+                <h1>
+                    Popular TV shows
+                </h1>
                 <li>
   	                <ul>
                         <li>Name: {tvShow.Name}</li>

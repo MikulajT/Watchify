@@ -14,6 +14,6 @@ namespace DAL.Repository
         /// Gets all users from database
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IdentityUser> GetAllUsers();
+        public IEnumerable<ApplicationUser> GetAllUsers();
     }
 }

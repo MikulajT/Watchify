@@ -11,7 +11,7 @@ namespace DAL.Repository
 {
     public class UsersRepository : IUsersRepository
     {
-        public IEnumerable<IdentityUser> GetAllUsers()
+        public IEnumerable<ApplicationUser> GetAllUsers()
         {
             using (var context = new ApplicationDbContext())
             {

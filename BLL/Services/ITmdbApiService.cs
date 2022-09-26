@@ -12,8 +12,8 @@ namespace BLL.Services
 {
     public interface ITmdbApiService
     {
-        public IEnumerable<SearchMovie> GetPopularMovies(string apiKey);
-        public IEnumerable<SearchTv> GetPopularTvShows(string apiKey);
+        public IEnumerable<SearchMovie> GetPopularMovies(string apiKey, int page = 0);
+        public IEnumerable<SearchTv> GetPopularTvShows(string apiKey, int page = 0);
         public IEnumerable<Genre> GetGenres(string apiKey);
     }
 }
