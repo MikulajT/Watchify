@@ -14,7 +14,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 builder.Services.AddHangfire(x =>
 {
@@ -26,6 +26,8 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<ITmdbApiService, TmdbApiService>();
 builder.Services.AddTransient<INotifierService, NotifierService>();
 builder.Services.AddTransient<IUsersRepository, UsersRepository>();
+builder.Services.AddTransient<ITvShowRepository, TvShowRepository>();
+builder.Services.AddTransient<ITvShowService, TvShowService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
