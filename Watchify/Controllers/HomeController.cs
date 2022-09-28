@@ -1,9 +1,8 @@
 ﻿using BLL.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
+using System.Security.Claims;
 using Watchify.Models;
-using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace Watchify.Controllers
 {
@@ -42,7 +41,12 @@ namespace Watchify.Controllers
         [HttpPost]
         public IActionResult SaveTvShowsSettings(int tvShowsCount, int[] genres)
         {
-            //TODO
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim != null)
+            {
+                string loggedUserId = claim.Value;
+                _tvShowService.ApplyTvShowSettings(loggedUserId, tvShowsCount, genres);
+            }
             return RedirectToAction("TvShows");
         }
 

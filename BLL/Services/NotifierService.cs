@@ -1,12 +1,5 @@
-﻿using AutoMapper;
-using BLL.ApiModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using BLL.ApiModels;
 using System.Text;
-using System.Threading.Tasks;
-using TMDbLib.Objects.Search;
-using TMDbLib.Objects.TvShows;
 
 namespace BLL.Services
 {
@@ -28,17 +21,17 @@ namespace BLL.Services
             for (int i = 0; i < users.Count; i++)
             {
                 StringBuilder htmlMessage = new StringBuilder();
-                if (users[i].SendTvShowNotifications)
+                if (users[i].TvShowsCount > 0)
                 {
                     var tvShows = _tmdbApiService.GetPopularTvShows(tmdbApiKey).ToList();
-                    string popularTvShows = CreateHtmlMessage(tmdbApiKey, tvShows, ShowType.TvShow);
+                    string popularTvShows = CreateHtmlMessage(tmdbApiKey, tvShows, "tv");
                     htmlMessage.Append("<h1>Popular Movies</h1>");
                     htmlMessage.Append(popularTvShows);
                 }
-                if (users[i].SendMovieNotifications)
+                if (users[i].MoviesCount > 0)
                 {
                     var movies = _tmdbApiService.GetPopularTvShows(tmdbApiKey).ToList();
-                    string popularMovies = CreateHtmlMessage(tmdbApiKey, movies, ShowType.Movie);
+                    string popularMovies = CreateHtmlMessage(tmdbApiKey, movies, "movie");
                     htmlMessage.Append("<h1>Popular TV shows</h1>");
                     htmlMessage.Append(popularMovies);
                 }
@@ -46,17 +39,8 @@ namespace BLL.Services
             }
         }
 
-        private string CreateHtmlMessage(string tmdbApiKey, List<MovieTvShow> moviesTvShows, ShowType showType)
+        private string CreateHtmlMessage(string tmdbApiKey, List<MovieTvShow> moviesTvShows, string showTypeUrl)
         {
-            string showTypeUrl = "";
-            if (showType == ShowType.TvShow)
-            {
-                showTypeUrl += "tv";
-            }
-            else if (showType == ShowType.Movie)
-            {
-                showTypeUrl += "movie";
-            }
             StringBuilder html = new StringBuilder();
             html.Append("<ol>");
             foreach (var movieTvShow in moviesTvShows)
@@ -91,10 +75,5 @@ namespace BLL.Services
             result.Length = result.Length - 2;
             return result.ToString();
         }
-    }
-
-    enum ShowType {
-        TvShow,
-        Movie
     }
 }

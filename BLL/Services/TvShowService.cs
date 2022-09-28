@@ -24,9 +24,14 @@ namespace BLL.Services
         }
         public IEnumerable<BGenre> GetAllTvShowGenres()
         {
-            var genres = _tvShowRepository.GetAllTvShowGenres().ToList();
+            var genres = _tvShowRepository.GetAllGenres().ToList();
             List<BGenre> mappedGenres = _mapper.Map<List<Genre>, List<BGenre>>(genres);
             return mappedGenres;
+        }
+
+        public void ApplyTvShowSettings(string userId, int tvShowsCount, int[] genres)
+        {
+            _tvShowRepository.ApplyTvShowSettings(userId, tvShowsCount, genres);
         }
     }
 }

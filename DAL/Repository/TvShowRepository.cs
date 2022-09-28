@@ -9,7 +9,7 @@ namespace DAL.Repository
 {
     public class TvShowRepository : ITvShowRepository
     {
-        public IEnumerable<Genre> GetAllTvShowGenres()
+        public IEnumerable<Genre> GetAllGenres()
         {
                 using (var context = new ApplicationDbContext())
                 {
@@ -19,6 +19,28 @@ namespace DAL.Repository
                         yield return genres[i];
                     }
                 }
+        }
+
+        public void ApplyTvShowSettings(string userId, int tvShowsCount, int[] genres)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                List<GenreFilter> genreFilters = new List<GenreFilter>(16);
+                for (int i = 0; i < genres.Length; i++)
+                {
+                    var user = context.Users.Single(x => x.Id == userId);
+                    user.TvShowsCount = tvShowsCount;
+                    GenreFilter genreFilter = new GenreFilter()
+                    {
+                        UserId = userId,
+                        GenreId = genres[i],
+                        ShowType = ShowType.TvShow
+                    };
+                    genreFilters.Add(genreFilter);
+                }
+                context.AddRange(genreFilters);
+                context.SaveChanges();
+            }
         }
     }
 }

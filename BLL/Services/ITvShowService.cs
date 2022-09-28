@@ -15,5 +15,12 @@ namespace BLL.Services
         /// </summary>
         /// <returns></returns>
         public IEnumerable<BGenre> GetAllTvShowGenres();
+
+        /// <summary>
+        /// Sets tv show genres for user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="genres"></param>
+        public void ApplyTvShowSettings(string userId, int tvShowsCount, int[] genres);
     }
 }
