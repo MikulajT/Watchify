@@ -1,5 +1,4 @@
 ﻿using DAL.Models;
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace DAL.Repository
 {
-    public interface IUsersRepository
+    public interface ITvShowRepository
     {
         /// <summary>
-        /// Gets all users
+        /// Gets all tv show genres
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<ApplicationUser> GetAllUsers();
+        public IEnumerable<Genre> GetAllTvShowGenres();
     }
 }
