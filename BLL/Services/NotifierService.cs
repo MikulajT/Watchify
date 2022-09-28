@@ -15,13 +15,11 @@ namespace BLL.Services
         private IUsersService _usersService { get; set; }
         private IEmailService _emailService { get; set; }
         private ITmdbApiService _tmdbApiService { get; set; }
-        private readonly IMapper _mapper;
-        public NotifierService(IUsersService usersService, IEmailService emailService, ITmdbApiService tmdbApiService, IMapper mapper)
+        public NotifierService(IUsersService usersService, IEmailService emailService, ITmdbApiService tmdbApiService)
         {
             _usersService = usersService;
             _emailService = emailService;
             _tmdbApiService = tmdbApiService;
-            _mapper = mapper;
         }
 
         public void NotifyAllUsers(string tmdbApiKey)
@@ -33,16 +31,14 @@ namespace BLL.Services
                 if (users[i].SendTvShowNotifications)
                 {
                     var tvShows = _tmdbApiService.GetPopularTvShows(tmdbApiKey).ToList();
-                    List<MovieTvShow> moviesTvShows = _mapper.Map<List<SearchTv>, List<MovieTvShow>>(tvShows);
-                    string popularTvShows = CreateHtmlMessage(tmdbApiKey, moviesTvShows, ShowType.TvShow);
+                    string popularTvShows = CreateHtmlMessage(tmdbApiKey, tvShows, ShowType.TvShow);
                     htmlMessage.Append("<h1>Popular Movies</h1>");
                     htmlMessage.Append(popularTvShows);
                 }
                 if (users[i].SendMovieNotifications)
                 {
-                    var tvShows = _tmdbApiService.GetPopularTvShows(tmdbApiKey).ToList();
-                    List<MovieTvShow> moviesTvShows = _mapper.Map<List<SearchTv>, List<MovieTvShow>>(tvShows);
-                    string popularMovies = CreateHtmlMessage(tmdbApiKey, moviesTvShows, ShowType.Movie);
+                    var movies = _tmdbApiService.GetPopularTvShows(tmdbApiKey).ToList();
+                    string popularMovies = CreateHtmlMessage(tmdbApiKey, movies, ShowType.Movie);
                     htmlMessage.Append("<h1>Popular TV shows</h1>");
                     htmlMessage.Append(popularMovies);
                 }

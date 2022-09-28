@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ApiModels\" />
+    <Folder Include="Models\ApiModels\" />
   </ItemGroup>
 
 </Project>

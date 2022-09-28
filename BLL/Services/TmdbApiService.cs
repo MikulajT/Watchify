@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using AutoMapper;
+using BLL.ApiModels;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -16,18 +18,26 @@ namespace BLL.Services
 {
     public class TmdbApiService : ITmdbApiService
     {
-        public IEnumerable<SearchMovie> GetPopularMovies(string apiKey, int page = 0)
+        private readonly IMapper _mapper;
+        public TmdbApiService(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
+        public IEnumerable<MovieTvShow> GetPopularMovies(string apiKey, int page = 0)
         {
             TMDbClient client = new TMDbClient(apiKey);
             var movies = client.GetMoviePopularListAsync().Result.Results;
-            return movies;
+            List<MovieTvShow> moviesTvShows = _mapper.Map<List<SearchMovie>, List<MovieTvShow>>(movies);
+            return moviesTvShows;
         }
 
-        public IEnumerable<SearchTv> GetPopularTvShows(string apiKey, int page = 0)
+        public IEnumerable<MovieTvShow> GetPopularTvShows(string apiKey, int page = 0)
         {
             TMDbClient client = new TMDbClient(apiKey);
             var tvShows = client.GetTvShowPopularAsync().Result.Results;
-            return tvShows;
+            List<MovieTvShow> moviesTvShows = _mapper.Map<List<SearchTv>, List<MovieTvShow>>(tvShows);
+            return moviesTvShows;
         }
 
         public IEnumerable<Genre> GetGenres(string apiKey)

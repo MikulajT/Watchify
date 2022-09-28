@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BLL.ApiModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +13,8 @@ namespace BLL.Services
 {
     public interface ITmdbApiService
     {
-        public IEnumerable<SearchMovie> GetPopularMovies(string apiKey, int page = 0);
-        public IEnumerable<SearchTv> GetPopularTvShows(string apiKey, int page = 0);
+        public IEnumerable<MovieTvShow> GetPopularMovies(string apiKey, int page = 0);
+        public IEnumerable<MovieTvShow> GetPopularTvShows(string apiKey, int page = 0);
         public IEnumerable<Genre> GetGenres(string apiKey);
     }
 }

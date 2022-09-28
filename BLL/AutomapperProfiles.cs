@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using BLL.ApiModels;
+using BLL.Models.BLLModels;
+using DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,7 @@ namespace BLL
             CreateMap<SearchTv, MovieTvShow>();
             CreateMap<SearchMovie, MovieTvShow>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Title));
+            CreateMap<Genre, BGenre>();
         }
     }
 }
