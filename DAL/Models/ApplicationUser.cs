@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,8 +12,9 @@ namespace DAL.Models
     public class ApplicationUser : IdentityUser
     {
         [Required]
-        public bool SendTvShowNotifications { get; set; }
+        public int TvShowsCount { get; set; }
+
         [Required]
-        public bool SendMovieNotifications { get; set; }
+        public int MoviesCount { get; set; }
     }
 }
