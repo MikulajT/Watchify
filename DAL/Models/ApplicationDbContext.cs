@@ -17,6 +17,7 @@ namespace DAL.Models
         //}
 
         public DbSet<Genre> Genres { get; set; }
+        public DbSet<GenreFilter> GenreFilter { get; set; }
 
         public ApplicationDbContext()
         {
@@ -29,6 +30,17 @@ namespace DAL.Models
             string connectionString = "Server=.;Database=Watchify;Trusted_Connection=True;MultipleActiveResultSets=true";
 
             optionsBuilder.UseSqlServer(connectionString);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<GenreFilter>().HasKey(u => new
+            {
+                u.UserId,
+                u.GenreId,
+                u.ShowType
+            });
         }
     }
 }
