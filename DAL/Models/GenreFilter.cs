@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Models
 {
-    public class GenreFilter
+    public class GenreFilters
     {
         public string UserId { get; set; }
         public int GenreId { get; set; }

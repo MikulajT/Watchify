@@ -25,12 +25,15 @@ namespace DAL.Repository
         {
             using (var context = new ApplicationDbContext())
             {
-                List<GenreFilter> genreFilters = new List<GenreFilter>(16);
+                List<GenreFilters> genreFilters = new List<GenreFilters>(16);
                 for (int i = 0; i < genres.Length; i++)
                 {
                     var user = context.Users.Single(x => x.Id == userId);
                     user.TvShowsCount = tvShowsCount;
-                    GenreFilter genreFilter = new GenreFilter()
+                    List<GenreFilters> previousFilters = context.GenreFilters.Where(x => x.UserId == userId && 
+                                                                                    x.ShowType == ShowType.TvShow).ToList();
+                    context.GenreFilters.RemoveRange(previousFilters);
+                    GenreFilters genreFilter = new GenreFilters()
                     {
                         UserId = userId,
                         GenreId = genres[i],

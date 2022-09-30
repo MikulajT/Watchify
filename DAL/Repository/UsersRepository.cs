@@ -22,5 +22,17 @@ namespace DAL.Repository
                 }
             }
         }
+
+        public IEnumerable<int> GetUserGenres(string userId)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                var genres = context.GenreFilters.Where(x => x.UserId == userId).Select(x => x.GenreId).ToList();
+                for (int i = 0; i < genres.Count(); i++)
+                {
+                    yield return genres[i];
+                }
+            }
+        }
     }
 }

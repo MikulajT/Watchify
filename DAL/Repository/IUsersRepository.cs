@@ -15,5 +15,12 @@ namespace DAL.Repository
         /// </summary>
         /// <returns></returns>
         public IEnumerable<ApplicationUser> GetAllUsers();
+
+        /// <summary>
+        /// Gets user genres
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public IEnumerable<int> GetUserGenres(string userId);
     }
 }
