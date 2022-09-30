@@ -7,7 +7,14 @@
     <form asp-controller="Home" asp-action="SaveTvShowsSettings">
         <div class="mb-3">
             <label for="tvShowsCount" class="form-label">
-                <h3>How many popular tv shows do you want to get</h3>
+                <h3 class="position-relative">
+                    How many popular tv shows do you want to get  
+                    <img src="~/images/question_mark.svg" 
+                        title="Number of tv shows filtered by genres you will get"
+                        class="position-absolute top-0 start-100 translate-middle mt-1 ms-3" 
+                        width="25em" 
+                        height="25em"/>
+                </h3>
             </label>
             <select id="tvShowsCount" name="tvShowsCount" class="form-select">
                 <option value="10">10</option>

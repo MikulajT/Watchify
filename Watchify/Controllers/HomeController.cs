@@ -21,7 +21,7 @@ namespace Watchify.Controllers
         [HttpGet]
         public IActionResult Index()
         {        
-            //_notifierService.NotifyAllUsers(_config["TmdbApiKey"]);
+            _notifierService.NotifyAllUsers(_config["TmdbApiKey"]);
             return View();
         }
 
