@@ -22,5 +22,10 @@ namespace BLL.Services
         {
             return _usersRepository.GetAllUsers();
         }
+
+        public IEnumerable<int> GetUserGenres(string userId)
+        {
+            return _usersRepository.GetUserGenres(userId);
+        }
     }
 }
