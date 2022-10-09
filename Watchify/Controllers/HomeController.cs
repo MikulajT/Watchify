@@ -22,16 +22,19 @@ namespace Watchify.Controllers
         [HttpGet]
         public IActionResult Index()
         {        
-            _notifierService.NotifyAllUsers(_config["TmdbApiKey"]);
+            //_notifierService.NotifyAllUsers(_config["TmdbApiKey"]);
             return View();
         }
 
         [HttpGet]
         public IActionResult TvShows()
         {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            string loggedUserId = claim.Value;
             ShowModel showModel = new ShowModel()
             {
                 Genres = _tvShowService.GetAllTvShowGenres().ToList(),
+                UserSettings = _tvShowService.GetUsersTvShowSettings(loggedUserId),
                 ShowType = Common.ShowType.TvShow
             };
             return View("TvShowMovieSettings", showModel);
@@ -52,11 +55,8 @@ namespace Watchify.Controllers
         public IActionResult SaveTvShowsSettings(int tvShowsCount, int[] genres)
         {
             var claim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (claim != null)
-            {
-                string loggedUserId = claim.Value;
-                _tvShowService.ApplyTvShowSettings(loggedUserId, tvShowsCount, genres);
-            }
+            string loggedUserId = claim.Value;
+            _tvShowService.ApplyTvShowSettings(loggedUserId, tvShowsCount, genres);
             return RedirectToAction("TvShows");
         }
 
