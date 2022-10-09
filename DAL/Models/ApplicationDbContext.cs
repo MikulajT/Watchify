@@ -17,7 +17,7 @@ namespace DAL.Models
         //}
 
         public DbSet<Genre> Genres { get; set; }
-        public DbSet<GenreFilters> GenreFilters { get; set; }
+        public DbSet<GenreFilter> GenreFilters { get; set; }
 
         public ApplicationDbContext()
         {
@@ -35,7 +35,7 @@ namespace DAL.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<GenreFilters>().HasKey(u => new
+            modelBuilder.Entity<GenreFilter>().HasKey(u => new
             {
                 u.UserId,
                 u.GenreId,

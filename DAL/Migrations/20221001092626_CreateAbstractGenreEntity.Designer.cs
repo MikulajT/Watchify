@@ -4,16 +4,18 @@ using DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Watchify.Migrations
+namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221001092626_CreateAbstractGenreEntity")]
+    partial class CreateAbstractGenreEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,22 +100,22 @@ namespace Watchify.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.Property<bool>("MovieGenre")
-                        .HasColumnType("bit");
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("TvShowGenre")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genre");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Genre");
                 });
 
-            modelBuilder.Entity("DAL.Models.GenreFilter", b =>
+            modelBuilder.Entity("DAL.Models.GenreFilters", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -264,7 +266,21 @@ namespace Watchify.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("DAL.Models.GenreFilter", b =>
+            modelBuilder.Entity("DAL.Models.MovieGenre", b =>
+                {
+                    b.HasBaseType("DAL.Models.Genre");
+
+                    b.HasDiscriminator().HasValue("MovieGenre");
+                });
+
+            modelBuilder.Entity("DAL.Models.TvShowGenre", b =>
+                {
+                    b.HasBaseType("DAL.Models.Genre");
+
+                    b.HasDiscriminator().HasValue("TvShowGenre");
+                });
+
+            modelBuilder.Entity("DAL.Models.GenreFilters", b =>
                 {
                     b.HasOne("DAL.Models.Genre", "Genre")
                         .WithMany()

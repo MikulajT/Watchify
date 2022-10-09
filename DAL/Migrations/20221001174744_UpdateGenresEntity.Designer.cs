@@ -4,16 +4,18 @@ using DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Watchify.Migrations
+namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221001174744_UpdateGenresEntity")]
+    partial class UpdateGenresEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,7 +115,7 @@ namespace Watchify.Migrations
                     b.ToTable("Genres");
                 });
 
-            modelBuilder.Entity("DAL.Models.GenreFilter", b =>
+            modelBuilder.Entity("DAL.Models.GenreFilters", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -264,7 +266,7 @@ namespace Watchify.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("DAL.Models.GenreFilter", b =>
+            modelBuilder.Entity("DAL.Models.GenreFilters", b =>
                 {
                     b.HasOne("DAL.Models.Genre", "Genre")
                         .WithMany()

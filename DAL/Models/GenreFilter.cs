@@ -5,10 +5,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 
 namespace DAL.Models
 {
-    public class GenreFilters
+    public class GenreFilter
     {
         public string UserId { get; set; }
         public int GenreId { get; set; }
@@ -21,9 +22,5 @@ namespace DAL.Models
         public Genre Genre { get; set; }
     }
 
-    public enum ShowType
-    {
-        TvShow,
-        Movie
-    }
+
 }
