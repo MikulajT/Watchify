@@ -13,7 +13,14 @@ namespace DAL.Repository
         /// Gets all tv show genres
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Genre> GetAllGenres();
+        public IEnumerable<Genre> GetAllTvShowGenres();
+
+        /// <summary>
+        /// Gets tv show genres for user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public UserSettings GetUsersTvShowSettings(string userId);
 
         /// <summary>
         /// Sets tv show genres for user

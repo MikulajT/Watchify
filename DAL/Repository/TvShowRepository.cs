@@ -10,16 +10,34 @@ namespace DAL.Repository
 {
     public class TvShowRepository : ITvShowRepository
     {
-        public IEnumerable<Genre> GetAllGenres()
+        public IEnumerable<Genre> GetAllTvShowGenres()
         {
                 using (var context = new ApplicationDbContext())
                 {
-                    var genres = context.Genres.ToList();
+                    var genres = context.Genres.Where(x => x.TvShowGenre).ToList();
                     for (int i = 0; i < genres.Count(); i++)
                     {
                         yield return genres[i];
                     }
                 }
+        }
+
+        public UserSettings GetUsersTvShowSettings(string userId)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                var genresIds = context.GenreFilters.Where(x => x.UserId == userId && x.Genre.TvShowGenre)
+                    .Select(x => x.GenreId)
+                    .ToList();
+
+                #pragma warning disable CS8602 // User will be logged at this point 
+                var tvShowsCount = context.Users.SingleOrDefault(x => x.Id == userId).TvShowsCount;
+                return new UserSettings()
+                {
+                    GenreIds = genresIds,
+                    ShowsCount = tvShowsCount
+                };
+            }
         }
 
         public void ApplyTvShowSettings(string userId, int tvShowsCount, int[] genres)
