@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Tv shows";
 }
-@model IEnumerable<BLL.Models.BLLModels.BGenre>
+@model Watchify.ViewModels.ShowModel
 
 <div class="container pt-3 text-center border shadow rounded">
     <form asp-controller="Home" asp-action="SaveTvShowsSettings">
@@ -30,12 +30,12 @@
             </label>
             <div class="container text-start">
                 <ul class="list-unstyled d-inline-block">
-                @foreach (var genre in Model)
+                @foreach (var genre in Model.Genres)
                 {
                     <li class="d-inline-block" style="width: 15%;">
                         <div>
                             <input class="form-check-input" type="checkbox" id="genre-@genre.Id" name="genres[]" value="@genre.Id">
-                                <label class="form-check-label" for="genre-@genre.Id">
+                            <label class="form-check-label" for="genre-@genre.Id">
                                 @genre.Name
                             </label>
                         </div>

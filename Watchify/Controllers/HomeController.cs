@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
 using Watchify.Models;
+using Watchify.ViewModels;
 
 namespace Watchify.Controllers
 {
@@ -28,14 +29,23 @@ namespace Watchify.Controllers
         [HttpGet]
         public IActionResult TvShows()
         {
-            var genres = _tvShowService.GetAllTvShowGenres().ToList();
-            return View(genres);
+            ShowModel showModel = new ShowModel()
+            {
+                Genres = _tvShowService.GetAllTvShowGenres().ToList(),
+                ShowType = Common.ShowType.TvShow
+            };
+            return View("TvShowMovieSettings", showModel);
         }
 
         [HttpGet]
         public IActionResult Movies()
         {
-            return View();
+            ShowModel showModel = new ShowModel()
+            {
+                Genres = _tvShowService.GetAllTvShowGenres().ToList(),
+                ShowType = Common.ShowType.Movie
+            };
+            return View("TvShowMovieSettings", showModel);
         }
 
         [HttpPost]
