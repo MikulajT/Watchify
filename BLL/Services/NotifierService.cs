@@ -88,12 +88,25 @@ namespace BLL.Services
             List<MovieTvShow> result = new List<MovieTvShow>(60);
             List<int> userGenres = _usersService.GetUserGenres(user.Id).ToList();
             int page = 0;
-            while (result.Count < user.TvShowsCount) {
-                var popularTvShows = _tmdbApiService.GetPopularTvShows(tmdbApiKey, page)
-                                        .Where(x => x.GenreIds
-                                        .Any(y => userGenres.Contains(y)));
-                result.AddRange(popularTvShows);
-                page++;
+            if (userGenres.Count > 0)
+            {
+                while (result.Count < user.TvShowsCount)
+                {
+                    var popularTvShows = _tmdbApiService.GetPopularTvShows(tmdbApiKey, page)
+                                            .Where(x => x.GenreIds
+                                            .Any(y => userGenres.Contains(y)));
+                    result.AddRange(popularTvShows);
+                    page++;
+                }
+            }
+            else
+            {
+                while (result.Count < user.TvShowsCount)
+                {
+                    var popularTvShows = _tmdbApiService.GetPopularTvShows(tmdbApiKey, page);
+                    result.AddRange(popularTvShows);
+                    page++;
+                }
             }
             return result.Take(user.TvShowsCount).ToList();
         }

@@ -19,6 +19,7 @@ namespace BLL
             CreateMap<SearchMovie, MovieTvShow>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Title));
             CreateMap<Genre, BGenre>();
+            CreateMap<UserSettings, BUserSettings>();
         }
     }
 }
