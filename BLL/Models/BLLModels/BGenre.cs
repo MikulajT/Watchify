@@ -12,5 +12,7 @@ namespace BLL.Models.BLLModels
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool TvShowGenre { get; set; }
+        public bool MovieGenre { get; set; }
     }
 }
