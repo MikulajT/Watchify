@@ -15,6 +15,7 @@ namespace BLL.Services
     {
         public IEnumerable<MovieTvShow> GetPopularMovies(string apiKey, int page = 0);
         public IEnumerable<MovieTvShow> GetPopularTvShows(string apiKey, int page = 0);
-        public IEnumerable<Genre> GetGenres(string apiKey);
+        public IEnumerable<Genre> GetTvShowGenres(string apiKey);
+        public IEnumerable<Genre> GetMovieGenres(string apiKey);
     }
 }

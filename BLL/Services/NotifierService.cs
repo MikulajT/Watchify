@@ -1,4 +1,5 @@
 ﻿using BLL.ApiModels;
+using Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace BLL.Services
                 if (users[i].TvShowsCount > 0)
                 {
                     var tvShows = FetchTvShowsForUser(tmdbApiKey, users[i]);
-                    string popularTvShows = CreateHtmlMessage(tmdbApiKey, tvShows, "tv");
+                    string popularTvShows = CreateHtmlMessage(tmdbApiKey, tvShows, ShowType.TvShow);
                     htmlMessage.Append("<div style=\"width:75%; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;\">");
                     htmlMessage.Append("<h1>Popular TV shows</h1>");
                     htmlMessage.Append(popularTvShows);
@@ -35,8 +36,8 @@ namespace BLL.Services
                 }
                 if (users[i].MoviesCount > 0)
                 {
-                    var movies = _tmdbApiService.GetPopularMovies(tmdbApiKey).ToList();
-                    string popularMovies = CreateHtmlMessage(tmdbApiKey, movies, "movie");
+                    var movies = FetchMoviesForUser(tmdbApiKey, users[i]);
+                    string popularMovies = CreateHtmlMessage(tmdbApiKey, movies, ShowType.Movie);
                     htmlMessage.Append("<div style=\"width:75%; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;\">");
                     htmlMessage.Append("<h1>Popular Movies</h1>");
                     htmlMessage.Append(popularMovies);
@@ -46,16 +47,17 @@ namespace BLL.Services
             }
         }
 
-        private string CreateHtmlMessage(string tmdbApiKey, List<MovieTvShow> moviesTvShows, string showTypeUrl)
+        private string CreateHtmlMessage(string tmdbApiKey, List<MovieTvShow> moviesTvShows, ShowType showType)
         {
             StringBuilder html = new StringBuilder();
+            string showTypeUrl = showType == ShowType.TvShow ? "tv" : "movie";
             html.Append("<ol style=\"list-style: none; padding: 0;\">");
             for (int i = 0; i < moviesTvShows.Count; i++)
             {
                 string genres = "";
                 if (moviesTvShows[i].GenreIds.Any())
                 {
-                    genres = CreateGenresFromIds(tmdbApiKey, moviesTvShows[i].GenreIds);
+                    genres = CreateGenresFromIds(tmdbApiKey, moviesTvShows[i].GenreIds, showType);
                 }
                 html.Append($@"
                 <li style=""border-bottom: 5px dotted #b3b3b3; margin-bottom: 10px; padding-bottom: 10px;"">
@@ -71,10 +73,18 @@ namespace BLL.Services
             return html.ToString();
         }
 
-        private string CreateGenresFromIds(string tmdbApiKey, List<int> genreIds)
+        private string CreateGenresFromIds(string tmdbApiKey, List<int> genreIds, ShowType showType)
         {
             StringBuilder result = new StringBuilder();
-            Dictionary<int, string> genres = _tmdbApiService.GetGenres(tmdbApiKey).ToDictionary(x => x.Id, x => x.Name);
+            Dictionary<int, string> genres;
+            if (showType == ShowType.TvShow)
+            {
+                genres = _tmdbApiService.GetTvShowGenres(tmdbApiKey).ToDictionary(x => x.Id, x => x.Name);
+            }
+            else
+            {
+                genres = _tmdbApiService.GetMovieGenres(tmdbApiKey).ToDictionary(x => x.Id, x => x.Name);
+            }
             for (int i = 0; i < genreIds.Count; i++)
             {
                 result.Append(genres[genreIds[i]] + ", ");
@@ -86,7 +96,7 @@ namespace BLL.Services
         private List<MovieTvShow> FetchTvShowsForUser(string tmdbApiKey, ApplicationUser user)
         {
             List<MovieTvShow> result = new List<MovieTvShow>(60);
-            List<int> userGenres = _usersService.GetUserGenres(user.Id).ToList();
+            List<int> userGenres = _usersService.GetUserTvShowGenres(user.Id).ToList();
             int page = 0;
             if (userGenres.Count > 0)
             {
@@ -109,6 +119,34 @@ namespace BLL.Services
                 }
             }
             return result.Take(user.TvShowsCount).ToList();
+        }
+
+        private List<MovieTvShow> FetchMoviesForUser(string tmdbApiKey, ApplicationUser user)
+        {
+            List<MovieTvShow> result = new List<MovieTvShow>(60);
+            List<int> userGenres = _usersService.GetUserMovieGenres(user.Id).ToList();
+            int page = 0;
+            if (userGenres.Count > 0)
+            {
+                while (result.Count < user.MoviesCount)
+                {
+                    var popularMovies = _tmdbApiService.GetPopularMovies(tmdbApiKey, page)
+                                            .Where(x => x.GenreIds
+                                            .Any(y => userGenres.Contains(y)));
+                    result.AddRange(popularMovies);
+                    page++;
+                }
+            }
+            else
+            {
+                while (result.Count < user.MoviesCount)
+                {
+                    var popularMovies = _tmdbApiService.GetPopularMovies(tmdbApiKey, page);
+                    result.AddRange(popularMovies);
+                    page++;
+                }
+            }
+            return result.Take(user.MoviesCount).ToList();
         }
     }
 }

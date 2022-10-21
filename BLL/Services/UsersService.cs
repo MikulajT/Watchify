@@ -23,9 +23,14 @@ namespace BLL.Services
             return _usersRepository.GetAllUsers();
         }
 
-        public IEnumerable<int> GetUserGenres(string userId)
+        public IEnumerable<int> GetUserTvShowGenres(string userId)
         {
-            return _usersRepository.GetUserGenres(userId);
+            return _usersRepository.GetUserTvShowGenres(userId);
+        }
+
+        public IEnumerable<int> GetUserMovieGenres(string userId)
+        {
+            return _usersRepository.GetUserMovieGenres(userId);
         }
     }
 }

@@ -1,18 +1,8 @@
 ﻿using AutoMapper;
 using BLL.ApiModels;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMDbLib.Client;
 using TMDbLib.Objects.General;
-using TMDbLib.Objects.Movies;
 using TMDbLib.Objects.Search;
-using TMDbLib.Objects.TvShows;
 
 namespace BLL.Services
 {
@@ -40,10 +30,17 @@ namespace BLL.Services
             return moviesTvShows;
         }
 
-        public IEnumerable<Genre> GetGenres(string apiKey)
+        public IEnumerable<Genre> GetTvShowGenres(string apiKey)
         {
             TMDbClient client = new TMDbClient(apiKey);
             var genres = client.GetTvGenresAsync().Result;
+            return genres;
+        }
+
+        public IEnumerable<Genre> GetMovieGenres(string apiKey)
+        {
+            TMDbClient client = new TMDbClient(apiKey);
+            var genres = client.GetMovieGenresAsync().Result;
             return genres;
         }
     }
