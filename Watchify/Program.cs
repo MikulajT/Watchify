@@ -21,13 +21,15 @@ builder.Services.AddHangfire(x =>
     x.UseSqlServerStorage(builder.Configuration["ConnectionString"]);
 });
 builder.Services.AddHangfireServer();
+builder.Services.AddTransient<IUsersRepository, UsersRepository>();
+builder.Services.AddTransient<ITvShowRepository, TvShowRepository>();
+builder.Services.AddTransient<IMovieRepository, MovieRepository>();
 builder.Services.AddTransient<IUsersService, UsersService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<ITmdbApiService, TmdbApiService>();
 builder.Services.AddTransient<INotifierService, NotifierService>();
-builder.Services.AddTransient<IUsersRepository, UsersRepository>();
-builder.Services.AddTransient<ITvShowRepository, TvShowRepository>();
 builder.Services.AddTransient<ITvShowService, TvShowService>();
+builder.Services.AddTransient<IMovieService, MovieService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

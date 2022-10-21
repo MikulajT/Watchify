@@ -2,21 +2,24 @@
     ViewData["Title"] = "Tv shows";
 }
 @model Watchify.ViewModels.ShowModel
-
+@{
+    string showType = Model.ShowType == Common.ShowType.TvShow ? "tv shows" : "movies";
+}
 <div class="container pt-3 text-center border shadow rounded">
-    <form asp-controller="Home" asp-action="SaveTvShowsSettings">
+    <form asp-controller="Home" asp-action="@(Model.ShowType == Common.ShowType.TvShow ? "SaveTvShowsSettings" : "SaveMovieSettings")">
         <div class="mb-3">
             <label for="tvShowsCount" class="form-label">
                 <h3 class="position-relative">
-                    How many popular tv shows do you want to get  
-                    <img src="~/images/question_mark.svg" 
-                        title="Number of tv shows filtered by genres you will get"
+
+                    How many popular @showType do you want to get
+                    <img src="~/images/question_mark.svg"
+                        title="Number of @showType filtered by genres you will get"
                         class="position-absolute top-0 start-100 translate-middle mt-1 ms-3" 
                         width="25em" 
                         height="25em"/>
                 </h3>
             </label>
-            <select id="tvShowsCount" name="tvShowsCount" class="form-select">
+            <select id="showsCount" name="showsCount" class="form-select">
                 @for (int i = 10; i <= 50; i+=10)
                 {
                     if (i == Model.UserSettings.ShowsCount) {

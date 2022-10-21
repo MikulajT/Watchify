@@ -12,11 +12,14 @@ namespace Watchify.Controllers
         private readonly INotifierService _notifierService;
         private readonly IConfiguration _config;
         private readonly ITvShowService _tvShowService;
-        public HomeController(INotifierService notifierService, IConfiguration config, ITvShowService tvShowService)
+        private readonly IMovieService _movieService;
+
+        public HomeController(INotifierService notifierService, IConfiguration config, ITvShowService tvShowService, IMovieService movieService)
         {
             _notifierService = notifierService;
             _config = config;
             _tvShowService = tvShowService;
+            _movieService = movieService;
         }
 
         [HttpGet]
@@ -43,27 +46,32 @@ namespace Watchify.Controllers
         [HttpGet]
         public IActionResult Movies()
         {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            string loggedUserId = claim.Value;
             ShowModel showModel = new ShowModel()
             {
-                Genres = _tvShowService.GetAllTvShowGenres().ToList(),
+                Genres = _movieService.GetAllMovieGenres().ToList(),
+                UserSettings = _movieService.GetUsersMovieSettings(loggedUserId),
                 ShowType = Common.ShowType.Movie
             };
             return View("TvShowMovieSettings", showModel);
         }
 
         [HttpPost]
-        public IActionResult SaveTvShowsSettings(int tvShowsCount, int[] genres)
+        public IActionResult SaveTvShowsSettings(int showsCount, int[] genres)
         {
             var claim = User.FindFirst(ClaimTypes.NameIdentifier);
             string loggedUserId = claim.Value;
-            _tvShowService.ApplyTvShowSettings(loggedUserId, tvShowsCount, genres);
+            _tvShowService.ApplyTvShowSettings(loggedUserId, showsCount, genres);
             return RedirectToAction("TvShows");
         }
 
         [HttpPost]
-        public IActionResult SaveMoviesettings()
+        public IActionResult SaveMovieSettings(int showsCount, int[] genres)
         {
-            //TODO
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            string loggedUserId = claim.Value;
+            _movieService.ApplyMovieSettings(loggedUserId, showsCount, genres);
             return RedirectToAction("Movies");
         }
 
