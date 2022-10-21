@@ -1,9 +1,9 @@
-using BLL;
 using BLL.Services;
 using DAL.Models;
 using DAL.Repository;
 using Hangfire;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using NToastNotify;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +30,12 @@ builder.Services.AddTransient<ITmdbApiService, TmdbApiService>();
 builder.Services.AddTransient<INotifierService, NotifierService>();
 builder.Services.AddTransient<ITvShowService, TvShowService>();
 builder.Services.AddTransient<IMovieService, MovieService>();
+builder.Services.AddRazorPages().AddNToastNotifyToastr(new ToastrOptions
+{
+    ProgressBar = true,
+    TimeOut = 5000,
+    PositionClass = ToastPositions.BottomRight
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -56,6 +62,8 @@ app.UseHangfireDashboard();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.UseNToastNotify();
 app.MapRazorPages();
 
 app.Run();

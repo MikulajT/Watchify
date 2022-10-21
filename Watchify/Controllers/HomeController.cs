@@ -1,31 +1,29 @@
 ﻿using BLL.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using NToastNotify;
 using System.Security.Claims;
-using Watchify.Models;
 using Watchify.ViewModels;
 
 namespace Watchify.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
-        private readonly INotifierService _notifierService;
-        private readonly IConfiguration _config;
         private readonly ITvShowService _tvShowService;
         private readonly IMovieService _movieService;
+        private readonly IToastNotification _toastNotification;
 
-        public HomeController(INotifierService notifierService, IConfiguration config, ITvShowService tvShowService, IMovieService movieService)
+        public HomeController(ITvShowService tvShowService, IMovieService movieService, IToastNotification toastNotification)
         {
-            _notifierService = notifierService;
-            _config = config;
             _tvShowService = tvShowService;
             _movieService = movieService;
+            _toastNotification = toastNotification;
         }
 
         [HttpGet]
         public IActionResult Index()
-        {        
-            //_notifierService.NotifyAllUsers(_config["TmdbApiKey"]);
+        {
             return View();
         }
 
@@ -63,6 +61,7 @@ namespace Watchify.Controllers
             var claim = User.FindFirst(ClaimTypes.NameIdentifier);
             string loggedUserId = claim.Value;
             _tvShowService.ApplyTvShowSettings(loggedUserId, showsCount, genres);
+            _toastNotification.AddSuccessToastMessage("Tv show settings saved.");
             return RedirectToAction("TvShows");
         }
 
@@ -72,13 +71,8 @@ namespace Watchify.Controllers
             var claim = User.FindFirst(ClaimTypes.NameIdentifier);
             string loggedUserId = claim.Value;
             _movieService.ApplyMovieSettings(loggedUserId, showsCount, genres);
+            _toastNotification.AddSuccessToastMessage("Movie settings saved.");
             return RedirectToAction("Movies");
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
