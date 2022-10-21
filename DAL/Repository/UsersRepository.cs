@@ -1,11 +1,4 @@
 ﻿using DAL.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Repository
 {
@@ -23,11 +16,27 @@ namespace DAL.Repository
             }
         }
 
-        public IEnumerable<int> GetUserGenres(string userId)
+        public IEnumerable<int> GetUserTvShowGenres(string userId)
         {
             using (var context = new ApplicationDbContext())
             {
-                var genres = context.GenreFilters.Where(x => x.UserId == userId).Select(x => x.GenreId).ToList();
+                var genres = context.GenreFilters.Where(x => x.UserId == userId && x.ShowType == Common.ShowType.TvShow)
+                    .Select(x => x.GenreId)
+                    .ToList();
+                for (int i = 0; i < genres.Count(); i++)
+                {
+                    yield return genres[i];
+                }
+            }
+        }
+
+        public IEnumerable<int> GetUserMovieGenres(string userId)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                var genres = context.GenreFilters.Where(x => x.UserId == userId && x.ShowType == Common.ShowType.Movie)
+                    .Select(x => x.GenreId)
+                    .ToList();
                 for (int i = 0; i < genres.Count(); i++)
                 {
                     yield return genres[i];

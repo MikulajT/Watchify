@@ -26,7 +26,7 @@ namespace DAL.Repository
         {
             using (var context = new ApplicationDbContext())
             {
-                var genresIds = context.GenreFilters.Where(x => x.UserId == userId && x.Genre.TvShowGenre)
+                var genresIds = context.GenreFilters.Where(x => x.UserId == userId && x.ShowType == ShowType.TvShow)
                     .Select(x => x.GenreId)
                     .ToList();
 
@@ -45,13 +45,13 @@ namespace DAL.Repository
             using (var context = new ApplicationDbContext())
             {
                 List<GenreFilter> genreFilters = new List<GenreFilter>(16);
+                List<GenreFilter> previousFilters = context.GenreFilters.Where(x => x.UserId == userId &&
+                                                                x.ShowType == ShowType.TvShow).ToList();
+                context.GenreFilters.RemoveRange(previousFilters);
+                var user = context.Users.Single(x => x.Id == userId);
+                user.TvShowsCount = tvShowsCount;
                 for (int i = 0; i < genres.Length; i++)
                 {
-                    var user = context.Users.Single(x => x.Id == userId);
-                    user.TvShowsCount = tvShowsCount;
-                    List<GenreFilter> previousFilters = context.GenreFilters.Where(x => x.UserId == userId && 
-                                                                                    x.ShowType == ShowType.TvShow).ToList();
-                    context.GenreFilters.RemoveRange(previousFilters);
                     GenreFilter genreFilter = new GenreFilter()
                     {
                         UserId = userId,

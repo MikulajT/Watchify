@@ -17,10 +17,17 @@ namespace DAL.Repository
         public IEnumerable<ApplicationUser> GetAllUsers();
 
         /// <summary>
-        /// Gets user genres
+        /// Gets users tv show genres
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public IEnumerable<int> GetUserGenres(string userId);
+        public IEnumerable<int> GetUserTvShowGenres(string userId);
+
+        /// <summary>
+        /// Gets users movie genres
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public IEnumerable<int> GetUserMovieGenres(string userId);
     }
 }
