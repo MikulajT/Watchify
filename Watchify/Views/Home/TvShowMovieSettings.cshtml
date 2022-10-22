@@ -5,6 +5,9 @@
 @{
     string showType = Model.ShowType == Common.ShowType.TvShow ? "tv shows" : "movies";
 }
+@section StyleSheets {
+    <link rel="stylesheet" href="~/css/TvShowMovieSettings.css" asp-append-version="true" />
+}
 <div class="container pt-3 text-center border shadow rounded">
     <form asp-controller="Home" asp-action="@(Model.ShowType == Common.ShowType.TvShow ? "SaveTvShowsSettings" : "SaveMovieSettings")">
         <div class="mb-3">
@@ -14,7 +17,7 @@
                     How many popular @showType do you want to get
                     <img src="~/images/question_mark.svg"
                         title="Number of @showType filtered by genres you will get"
-                        class="position-absolute top-0 start-100 translate-middle mt-1 ms-3" 
+                        class="position-absolute top-0 start-100 translate-middle mt-1 ms-2" 
                         width="25em" 
                         height="25em"/>
                 </h3>
@@ -35,12 +38,12 @@
             <label for="genres" class="form-label">
                 <h3>Genres</h3>
             </label>
-            <div class="container text-start">
+            <div class="container text-start" id="genres">
                 <ul class="list-unstyled d-inline-block">
                 @foreach (var genre in Model.Genres)
                 {
                     string checkGenre = Model.UserSettings.GenreIds.Contains(genre.Id) ? "checked" : "";
-                    <li class="d-inline-block" style="width: 15%;">
+                    <li class="d-inline-block">
                         <div>
                             <input class="form-check-input" type="checkbox" id="genre-@genre.Id" name="genres[]" value="@genre.Id" @checkGenre="checked">
                             <label class="form-check-label" for="genre-@genre.Id">
