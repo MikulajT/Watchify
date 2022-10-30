@@ -17,7 +17,7 @@ namespace BLL.Services
         public IEnumerable<MovieTvShow> GetPopularMovies(string apiKey, int page = 0)
         {
             TMDbClient client = new TMDbClient(apiKey);
-            var movies = client.GetMoviePopularListAsync().Result.Results;
+            var movies = client.GetMoviePopularListAsync(page: page).Result.Results;
             List<MovieTvShow> moviesTvShows = _mapper.Map<List<SearchMovie>, List<MovieTvShow>>(movies);
             return moviesTvShows;
         }
@@ -25,7 +25,7 @@ namespace BLL.Services
         public IEnumerable<MovieTvShow> GetPopularTvShows(string apiKey, int page = 0)
         {
             TMDbClient client = new TMDbClient(apiKey);
-            var tvShows = client.GetTvShowPopularAsync().Result.Results;
+            var tvShows = client.GetTvShowPopularAsync(page: page).Result.Results;
             List<MovieTvShow> moviesTvShows = _mapper.Map<List<SearchTv>, List<MovieTvShow>>(tvShows);
             return moviesTvShows;
         }

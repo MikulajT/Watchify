@@ -97,7 +97,7 @@ namespace BLL.Services
         {
             List<MovieTvShow> result = new List<MovieTvShow>(60);
             List<int> userGenres = _usersService.GetUserTvShowGenres(user.Id).ToList();
-            int page = 0;
+            int page = 1;
             if (userGenres.Count > 0)
             {
                 while (result.Count < user.TvShowsCount)
@@ -125,7 +125,7 @@ namespace BLL.Services
         {
             List<MovieTvShow> result = new List<MovieTvShow>(60);
             List<int> userGenres = _usersService.GetUserMovieGenres(user.Id).ToList();
-            int page = 0;
+            int page = 1;
             if (userGenres.Count > 0)
             {
                 while (result.Count < user.MoviesCount)
