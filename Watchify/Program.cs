@@ -58,7 +58,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseHangfireDashboard();
-//RecurringJob.AddOrUpdate<NotifierService>(x => x.NotifyAllUsers(builder.Configuration["TmdbApiKey"]), "0 4 * * 5");
+RecurringJob.AddOrUpdate<NotifierService>(x => x.NotifyAllUsers(builder.Configuration["TmdbApiKey"]), "0 4 * * 5", timeZone: TimeZoneInfo.Local);
 
 app.MapControllerRoute(
     name: "default",
